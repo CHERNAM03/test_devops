@@ -1,20 +1,20 @@
-let score = 0; // Variable pour le score
-let count = 0; // Variable pour le nombre de clics
-let isGameActive = false; // Variable pour vérifier si le chrono est actif
+// Variables globales
+let score = 0;          // Score actuel
+let isGameActive = false; // État du jeu
 
-// Sélectionner le bouton, l'élément de score et le chrono
-const button = document.getElementById('clickButton');
+// Sélectionner les éléments du DOM
+const clickButton = document.getElementById('clickButton');
 const scoreDisplay = document.getElementById('score');
-const timerDisplay = document.createElement('p'); // Ajouter un élément pour afficher le chrono
-document.body.appendChild(timerDisplay);
+const timerDisplay = document.getElementById('timer');
 
-// Fonction pour démarrer le chrono
+/**
+ * Démarre le jeu avec un compte à rebours
+ */
 function startGame() {
   if (isGameActive) return; // Empêcher de redémarrer le jeu si déjà actif
 
   isGameActive = true;
-  score = 0; // Réinitialiser le score
-  scoreDisplay.textContent = score;
+  resetScore(); // Réinitialiser le score
 
   let timeLeft = 5; // Temps imparti en secondes
   timerDisplay.textContent = `Temps restant : ${timeLeft}s`;
@@ -31,15 +31,41 @@ function startGame() {
   }, 1000);
 }
 
-// Ajouter un écouteur d'événement pour détecter les clics
-button.addEventListener('click', () => {
-  if (isGameActive) {
-    count++; // Incrémenter le nombre de clics
-    score++; // Incrémenter le score
-    scoreDisplay.textContent = score; // Mettre à jour l'affichage du score
-    console.log(`Nombre de clics : ${count}`); // Afficher le nombre de clics dans la console
+/**
+ * Incrémente le score et met à jour l'affichage
+ * @param {boolean} forceUpdate - Si true, incrémente le score même si le jeu n'est pas actif (pour les tests)
+ */
+function updateScore(forceUpdate = false) {
+  if (isGameActive || forceUpdate) {
+    score++;
+    scoreDisplay.textContent = score;
   }
-});
+}
 
-// Démarrer le jeu automatiquement au chargement de la page
-startGame();
+/**
+ * Réinitialise le score et met à jour l'affichage
+ */
+function resetScore() {
+  score = 0;
+  scoreDisplay.textContent = score;
+}
+
+// Ajouter un écouteur d'événement pour détecter les clics
+if (clickButton) {
+  // Démarrer le jeu au premier clic
+  clickButton.addEventListener('click', () => {
+    if (!isGameActive) {
+      startGame();
+    }
+    updateScore();
+  });
+}
+
+// Exporter les fonctions et variables pour les tests
+module.exports = {
+  startGame,
+  updateScore,
+  resetScore,
+  score,
+  isGameActive
+};
