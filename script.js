@@ -6,6 +6,7 @@ let isGameActive = false; // État du jeu
 const clickButton = document.getElementById('clickButton');
 const scoreDisplay = document.getElementById('score');
 const timerDisplay = document.getElementById('timer');
+const resetButton = document.getElementById('resetButton'); // Sélectionner le bouton de réinitialisation
 
 /**
  * Démarre le jeu avec un compte à rebours
@@ -48,6 +49,8 @@ function updateScore(forceUpdate = false) {
 function resetScore() {
   score = 0;
   scoreDisplay.textContent = score;
+  timerDisplay.textContent = "Cliquez pour commencer"; // Réinitialiser le texte du timer
+  isGameActive = false; // S'assurer que le jeu n'est plus actif
 }
 
 // Ajouter un écouteur d'événement pour détecter les clics
@@ -61,11 +64,7 @@ if (clickButton) {
   });
 }
 
-// Exporter les fonctions et variables pour les tests
-module.exports = {
-  startGame,
-  updateScore,
-  resetScore,
-  score,
-  isGameActive
-};
+// Ajouter un écouteur d'événement pour le bouton de réinitialisation
+if (resetButton) {
+  resetButton.addEventListener('click', resetScore);
+}
